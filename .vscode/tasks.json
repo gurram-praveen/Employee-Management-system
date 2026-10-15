@@ -1,0 +1,18 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Start Employee Management Backend",
+            "type": "shell",
+            "command": "mvn",
+            "args": [
+                "spring-boot:run"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}\\employee-management-system\\backend"
+            },
+            "isBackground": true,
+            "problemMatcher": []
+        }
+    ]
+}

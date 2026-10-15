@@ -1,0 +1,133 @@
+{
+  "info": {
+    "name": "Employee Management System",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "basic",
+    "basic": [
+      { "key": "username", "value": "{{adminUsername}}", "type": "string" },
+      { "key": "password", "value": "{{adminPassword}}", "type": "string" }
+    ]
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8080" },
+    { "key": "id", "value": "1" },
+    { "key": "adminUsername", "value": "admin" },
+    { "key": "adminPassword", "value": "change-me" }
+  ],
+  "item": [
+    {
+      "name": "List employees (page 0, size 10)",
+      "request": { "method": "GET", "url": "{{baseUrl}}/api/employees?page=0&size=10" }
+    },
+    {
+      "name": "Search by name or email",
+      "request": { "method": "GET", "url": "{{baseUrl}}/api/employees?search=asha" }
+    },
+    {
+      "name": "Filter by department and status",
+      "request": { "method": "GET", "url": "{{baseUrl}}/api/employees?department=Engineering&status=ACTIVE" }
+    },
+    {
+      "name": "Summary counts",
+      "request": { "method": "GET", "url": "{{baseUrl}}/api/employees/summary" }
+    },
+    {
+      "name": "Departments",
+      "request": { "method": "GET", "url": "{{baseUrl}}/api/employees/departments" }
+    },
+    {
+      "name": "Export employees as CSV",
+      "request": { "method": "GET", "url": "{{baseUrl}}/api/employees/export?department=Engineering&status=ACTIVE" }
+    },
+    {
+      "name": "Department management",
+      "item": [
+        {
+          "name": "List departments",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/departments" }
+        },
+        {
+          "name": "Create department",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/departments",
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Research\"\n}" }
+          }
+        },
+        {
+          "name": "Rename department",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/departments/1",
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Research & Development\"\n}" }
+          }
+        },
+        {
+          "name": "Delete unused department",
+          "request": { "method": "DELETE", "url": "{{baseUrl}}/api/departments/1" }
+        }
+      ]
+    },
+    {
+      "name": "Validate admin login",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "{{baseUrl}}/api/auth/login",
+        "body": { "mode": "raw", "raw": "{\n  \"username\": \"{{adminUsername}}\",\n  \"password\": \"{{adminPassword}}\"\n}" }
+      }
+    },
+    {
+      "name": "Get employee by id",
+      "request": { "method": "GET", "url": "{{baseUrl}}/api/employees/{{id}}" }
+    },
+    {
+      "name": "Create employee",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "{{baseUrl}}/api/employees",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"employeeId\": \"EMP101\",\n  \"fullName\": \"Test User\",\n  \"email\": \"test.user@example.com\",\n  \"phoneNumber\": \"9123456780\",\n  \"department\": \"Engineering\",\n  \"designation\": \"Developer\",\n  \"dateOfJoining\": \"2024-06-01\",\n  \"salary\": 50000,\n  \"status\": \"ACTIVE\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Update employee",
+      "request": {
+        "method": "PUT",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "{{baseUrl}}/api/employees/{{id}}",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"employeeId\": \"EMP001\",\n  \"fullName\": \"Asha Rao\",\n  \"email\": \"asha.rao@example.com\",\n  \"phoneNumber\": \"9876543210\",\n  \"department\": \"Engineering\",\n  \"designation\": \"Lead Developer\",\n  \"dateOfJoining\": \"2021-03-15\",\n  \"salary\": 105000,\n  \"status\": \"ACTIVE\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Delete employee",
+      "request": { "method": "DELETE", "url": "{{baseUrl}}/api/employees/{{id}}" }
+    },
+    {
+      "name": "Error: validation failure (expect 400)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "{{baseUrl}}/api/employees",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"employeeId\": \"\",\n  \"fullName\": \"\",\n  \"email\": \"not-an-email\",\n  \"phoneNumber\": \"123\",\n  \"salary\": -5\n}"
+        }
+      }
+    },
+    {
+      "name": "Error: missing employee (expect 404)",
+      "request": { "method": "GET", "url": "{{baseUrl}}/api/employees/999999" }
+    }
+  ]
+}
